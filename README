@@ -1,0 +1,11 @@
+FINDIK Project (http://findikproject.org)
+===============================================================
+
+FINDIK is a free open-source content filtering framework for TCP protocols.
+
+Main objective of the project is to develop a secure, generic infrastructure for protocol integration and support common communication techniques. In order to avoid users to reimplement communication and proxying algorithms, FINDIK API enforce user to work in a very simple and service oriented way. As a result, user could be focused on just protocol implementation and filtering operations.
+
+Currently, integration of HTTP protocol is included in FINDIK project. Also, common filtering techniques related to HTTP protocol is in focus of FINDIK development community. Most of all known HTTP filtering techniques are already implemented.
+
+After stable release with current features, intelligent content analysis algorithms, trusted time stamping and web configuration interface will be at top in future plans of FINDIK project.
+

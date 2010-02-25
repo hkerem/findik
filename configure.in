@@ -1,0 +1,404 @@
+# Process this file with autoconf to produce a configure script.
+
+AC_PREREQ(2.59)
+AC_INIT([findik],[0.2h],[findikmail@gmail.com])
+AC_CONFIG_SRCDIR([src/main/findik.cpp])
+AC_CONFIG_HEADERS([src/include/config/config.h])
+
+AC_SUBST([TEST_SYSTEM])
+
+# Checks for programs.
+AC_PROG_CXX
+AC_PROG_CC
+AC_PROG_LIBTOOL
+AC_PROG_RANLIB
+AC_LANG(C++)
+
+if test x"$(uname -s)" = xFreeBSD ; then
+	CPPFLAGS="$CPPFLAGS -I/usr/local/include -I/usr/local/include/mysql"
+	LDFLAGS="$LDFLAGS -L/usr/local/lib"
+else
+	CPPFLAGS="$CPPFLAGS -I/usr/include/mysql"
+fi
+
+AM_INIT_AUTOMAKE
+
+# Checks for libraries.
+# ex: AC_CHECK_LIB([name],[break])
+AC_CHECK_LIB([pthread],[break])
+AC_CHECK_LIB([boost_thread],[break])
+AC_CHECK_LIB([boost_system],[break])
+AC_CHECK_LIB([z],[break])
+
+# Checks for header files.
+AC_CHECK_HEADER([pthread.h],[break])
+AC_CHECK_HEADER([boost/asio.hpp],[break])
+AC_CHECK_HEADER([boost/array.hpp],[break])
+AC_CHECK_HEADER([boost/shared_ptr.hpp],[break])
+AC_CHECK_HEADER([boost/bind.hpp],[break])
+AC_CHECK_HEADER([boost/function.hpp],[break])
+AC_CHECK_HEADER([boost/lexical_cast.hpp],[break])
+AC_CHECK_HEADER([boost/logic/tribool.hpp],[break])
+AC_CHECK_HEADER([boost/foreach.hpp],[break])
+AC_CHECK_HEADER([boost/noncopyable.hpp],[break])
+AC_CHECK_HEADER([boost/tuple/tuple.hpp],[break])
+AC_CHECK_HEADER([boost/thread.hpp],[break])
+
+AC_CHECK_HEADER([buffio.h],[break])
+AC_CHECK_HEADER([zlib.h],[break])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_HEADER_STDBOOL
+AC_C_CONST
+AC_TYPE_SIZE_T
+
+
+# asking user if they want MAGIC support
+AC_MSG_CHECKING(for LIBMAGIC support enabled)
+AC_ARG_ENABLE(
+magic,
+[AC_HELP_STRING([--enable-magic@<:@=yes@:>@], [Enable support for the MAGIC-FILE library])],
+[ if test "x$enableval" = "xno"; then
+        magic=false
+        AC_MSG_RESULT(no)
+else
+        magic=true
+        AC_MSG_RESULT(yes)
+fi
+],
+[ # enable by default
+        magic=true
+        AC_MSG_RESULT(yes)
+]
+)
+if test "x$magic" = "xtrue"; then
+	AC_CHECK_HEADER([magic.h],[break])
+	AC_CHECK_LIB([magic],[break])
+        AC_DEFINE([HAVE_MAGIC],[],[Define to enable MAGIC support])
+        MAGIC_LIBS="-lmagic ${MAGIC_LIBS}"
+else
+        AC_CHECK_FUNCS([printf])
+fi
+AM_CONDITIONAL(HAVE_MAGIC, test "x$magic" = "xtrue")
+
+# asking user if they want CLAMDAV support
+AC_MSG_CHECKING(for CLAMD AV support enabled)
+AC_ARG_ENABLE(
+clamdav,
+[AC_HELP_STRING([--enable-clamdav@<:@=yes@:>@], [Enable support for the CLAMD AV])],
+[ if test "x$enableval" = "xno"; then
+        clamdav=false
+        AC_MSG_RESULT(no)
+else
+        clamdav=true
+        AC_MSG_RESULT(yes)
+fi
+],
+[ # enable by default
+        clamdav=true
+        AC_MSG_RESULT(yes)
+]
+)
+if test "x$clamdav" = "xtrue"; then
+        AC_DEFINE([HAVE_CLAMD],[],[Define to enable CLAMD AV support])
+else
+        AC_CHECK_FUNCS([printf])
+fi
+AM_CONDITIONAL(HAVE_CLAMD, test "x$clamdav" = "xtrue")
+
+# asking user if they want FILE EXT support
+AC_MSG_CHECKING(for FILEEXT support enabled)
+AC_ARG_ENABLE(
+fileext,
+[AC_HELP_STRING([--enable-fileext@<:@=yes@:>@], [Enable support for the FILE EXT Filter])],
+[ if test "x$enableval" = "xno"; then
+        fileext=false
+        AC_MSG_RESULT(no)
+else
+        fileext=true
+        AC_MSG_RESULT(yes)
+fi
+],
+[ # enable by default
+        fileext=true
+        AC_MSG_RESULT(yes)
+]
+)
+if test "x$fileext" = "xtrue"; then
+        AC_DEFINE([HAVE_FILEEXT],[],[Define to enable File Extension support])
+else
+        AC_CHECK_FUNCS([printf])
+fi
+AM_CONDITIONAL(HAVE_FILEEXT, test "x$fileext" = "xtrue")
+
+# asking user if they want PCRE support
+AC_MSG_CHECKING(for PCRE support enabled)
+AC_ARG_ENABLE(
+pcre,
+[AC_HELP_STRING([--enable-pcre@<:@=yes@:>@], [Enable support for the PCRE])],
+[ if test "x$enableval" = "xno"; then
+        pcre=false
+        AC_MSG_RESULT(no)
+else
+        pcre=true
+        AC_MSG_RESULT(yes)
+fi
+],
+[ # enable by default
+        pcre=true
+        AC_MSG_RESULT(yes)
+]
+)
+if test "x$pcre" = "xtrue"; then
+	AC_CHECK_HEADER([pcrecpp.h],[break])
+	AC_CHECK_LIB([pcrecpp],[break])
+        AC_DEFINE([HAVE_PCRE],[],[Define to enable PCRE support])
+else
+        AC_CHECK_FUNCS([printf])
+fi
+AM_CONDITIONAL(HAVE_PCRE, test "x$pcre" = "xtrue")
+
+# asking user if they want AD_KERB support
+AC_MSG_CHECKING(for Active Directory Kerberos support enabled)
+AC_ARG_ENABLE(
+adkerb,
+[AC_HELP_STRING([--enable-adkerb@<:@=yes@:>@], [Enable support for the Active Directory Kerberos])],
+[ if test "x$enableval" = "xno"; then
+        adkerb=false
+        AC_MSG_RESULT(no)
+else
+        adkerb=true
+        AC_MSG_RESULT(yes)
+fi
+],
+[ # enable by default
+        adkerb=true
+        AC_MSG_RESULT(yes)
+]
+)
+if test "x$adkerb" = "xtrue"; then
+	AC_CHECK_HEADER([gssapi/gssapi.h],[break])
+	AC_CHECK_HEADER([krb5.h],[break])
+	AC_CHECK_LIB([gssapi],[break])
+        AC_DEFINE([HAVE_ADKERB],[],[Define to enable Active Directory Kerberos support])
+else
+        AC_CHECK_FUNCS([printf])
+fi
+AM_CONDITIONAL(HAVE_ADKERB, test "x$adkerb" = "xtrue")
+
+# asking user if they want LDAP support
+AC_MSG_CHECKING(for LDAP support enabled)
+AC_ARG_ENABLE(
+ldap,
+[AC_HELP_STRING([--enable-ldap@<:@=yes@:>@], [Enable support for the LDAP support])],
+[ if test "x$enableval" = "xno"; then
+        ldap=false
+        AC_MSG_RESULT(no)
+else
+        ldap=true
+        AC_MSG_RESULT(yes)
+fi
+],
+[ # enable by default
+        ldap=true
+        AC_MSG_RESULT(yes)
+]
+)
+if test "x$ldap" = "xtrue"; then
+	AC_CHECK_LIB([crypt],[break])
+	AC_CHECK_HEADER([ldap.h],[break])
+        AC_DEFINE([HAVE_LDAP],[],[Define to enable LDAP support])
+else
+        AC_CHECK_FUNCS([printf])
+fi
+AM_CONDITIONAL(HAVE_LDAP, test "x$ldap" = "xtrue")
+
+# asking user if they want SIMPLE DBMANAGER support
+AC_MSG_CHECKING(for SIMPLE DBMANAGER support enabled)
+AC_ARG_ENABLE(
+simpledb,
+[AC_HELP_STRING([--enable-simpledb@<:@=no@:>@], [Enable support for the SIMPLE DBMANAGER library])],
+[ if test "x$enableval" = "xno"; then
+        simpledb=false
+        AC_MSG_RESULT(no)
+else
+        simpledb=true
+        AC_MSG_RESULT(yes)
+fi
+],
+[ # disable by default
+        simpledb=false
+        AC_MSG_RESULT(no)
+]
+)
+if test "x$simpledb" = "xtrue"; then
+        AC_DEFINE([HAVE_SIMPLEDB],[],[Define to enable SIMPLE DBMANAGER support])
+else
+        AC_CHECK_FUNCS([printf])
+fi
+AM_CONDITIONAL(HAVE_SIMPLEDB, test "x$simpledb" = "xtrue")
+
+# asking user if they want MYSQL support
+AC_MSG_CHECKING(for MYSQL support enabled)
+AC_ARG_ENABLE(
+mysql,
+[AC_HELP_STRING([--enable-mysql@<:@=yes@:>@], [Enable support for the MYSQL library])],
+[ if test "x$enableval" = "xno"; then
+        mysql=false
+        AC_MSG_RESULT(no)
+else
+        mysql=true
+        AC_MSG_RESULT(yes)
+fi
+],
+[ # enable by default
+        mysql=true
+        AC_MSG_RESULT(yes)
+]
+)
+if test "x$mysql" = "xtrue"; then
+	AC_CHECK_HEADER([mysql++/mysql++.h],[break])
+	AC_CHECK_LIB([mysqlpp],[break])
+        AC_DEFINE([HAVE_MYSQL],[],[Define to enable MYSQL support])
+else
+        AC_CHECK_FUNCS([printf])
+fi
+AM_CONDITIONAL(HAVE_MYSQL, test "x$mysql" = "xtrue")
+
+# asking user if they want SSL support
+AC_MSG_CHECKING(for SSL support enabled)
+AC_ARG_ENABLE(
+ssl,
+[AC_HELP_STRING([--enable-ssl@<:@=yes@:>@], [Enable support for SSL])],
+[ if test "x$enableval" = "xno"; then
+        ssl=false
+        AC_MSG_RESULT(no)
+else
+        ssl=true
+        AC_MSG_RESULT(yes)
+fi
+],
+[ # enable by default
+        ssl=true
+        AC_MSG_RESULT(yes)
+]
+)
+if test "x$ssl" = "xtrue"; then
+	AC_CHECK_LIB([crypto],[break])
+        AC_DEFINE([HAVE_SSL],[],[Define to enable SSL support])
+else
+        AC_CHECK_FUNCS([printf])
+fi
+AM_CONDITIONAL(HAVE_SSL, test "x$ssl" = "xtrue")
+
+# asking user if they want LIBCONFIG support
+AC_MSG_CHECKING(for LIBCONFIG support enabled)
+AC_ARG_ENABLE(
+libconfig,
+[AC_HELP_STRING([--enable-libconfig@<:@=yes@:>@], [Enable support for LIBCONFIG])],
+[ if test "x$enableval" = "xno"; then
+        libconfig=false
+        AC_MSG_RESULT(no)
+else
+        libconfig=true
+        AC_MSG_RESULT(yes)
+fi
+],
+[ # enable by default
+        libconfig=true
+        AC_MSG_RESULT(yes)
+]
+)
+if test "x$libconfig" = "xtrue"; then
+	AC_CHECK_HEADER([libconfig.h++],[break])
+	AC_CHECK_LIB([config++],[break])
+        AC_DEFINE([HAVE_LIBCONFIG],[],[Define to enable LIBCONFIG support])
+else
+        AC_CHECK_FUNCS([printf])
+fi
+AM_CONDITIONAL(HAVE_LIBCONFIG, test "x$libconfig" = "xtrue")
+
+# asking user if they want BOOST_PROGRAM_OPTIONS support
+AC_MSG_CHECKING(for Boost Program Options support enabled)
+AC_ARG_ENABLE(
+boost_po,
+[AC_HELP_STRING([--enable-boost-po@<:@=yes@:>@], [Enable support for Boost Program Options])],
+[ if test "x$enableval" = "xno"; then
+        boost_po=false
+        AC_MSG_RESULT(no)
+else
+        boost_po=true
+        AC_MSG_RESULT(yes)
+fi
+],
+[ # enable by default
+        boost_po=true
+        AC_MSG_RESULT(yes)
+]
+)
+if test "x$boost_po" = "xtrue"; then
+        AC_DEFINE([HAVE_BOOST_PO],[],[Define to enable BOOST_PO support])
+else
+        AC_CHECK_FUNCS([printf])
+fi
+AM_CONDITIONAL(HAVE_BOOST_PO, test "x$boost_po" = "xtrue")
+
+# asking user if they want LOG4CXX  support
+AC_MSG_CHECKING(for Log4cxx Advanced Logging support enabled)
+AC_ARG_ENABLE(
+log4cxx,
+[AC_HELP_STRING([--enable-log4cxx@<:@=yes@:>@], [Enable support for Log4cxx Advanced Logging])],
+[ if test "x$enableval" = "xno"; then
+        log4cxx=false
+        AC_MSG_RESULT(no)
+else
+        log4cxx=true
+        AC_MSG_RESULT(yes)
+fi
+],
+[ # enable by default
+        log4cxx=true
+        AC_MSG_RESULT(yes)
+]
+)
+if test "x$log4cxx" = "xtrue"; then
+	AC_CHECK_LIB([log4cxx],[break])
+        AC_DEFINE([HAVE_LOG4CXX],[],[Define to enable LOG4CXX support])
+else
+        AC_CHECK_FUNCS([printf])
+fi
+AM_CONDITIONAL(HAVE_LOG4CXX, test "x$log4cxx" = "xtrue")
+
+
+AC_CONFIG_FILES([
+	Makefile
+	conf/Makefile
+	packaging/Makefile
+	scripts/Makefile
+	sql/Makefile
+	src/Makefile
+	src/cli/Makefile
+	src/cli/blimporter/Makefile
+	src/include/Makefile
+	src/main/Makefile
+	src/main/authenticator/Makefile
+	src/main/config/Makefile
+	src/main/filter/Makefile
+	src/main/logging/Makefile
+	src/main/io/Makefile
+	src/main/parser/Makefile
+	src/main/persistency/Makefile
+	src/main/protocols/Makefile
+	src/main/protocols/http/Makefile
+	src/main/protocols/http/auth_util/Makefile
+	src/main/service/Makefile
+	src/main/util/Makefile
+	src/test/Makefile
+])
+
+# Checks for library functions.
+AC_OUTPUT([
+	findik.spec
+])
+
+

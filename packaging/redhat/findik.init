@@ -1,0 +1,58 @@
+#!/bin/bash
+#
+# findik       Startup script for FINDIK
+#
+# chkconfig: 2345 95 20
+# description: FINDIK is a content filtering framework.
+#
+# processname: findik
+# config: /etc/findik/findik.cfg
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+prog=findik
+findik=/usr/bin/$prog
+OPTIONS="-d"
+lockfile=/var/lock/subsys/$prog
+RETVAL=0
+
+start() {
+        echo -n $"Starting $prog: "
+        daemon $findik $OPTIONS
+        RETVAL=$?
+        echo
+        [ $RETVAL = 0 ] && touch ${lockfile}
+        return $RETVAL
+}
+
+stop() {
+	echo -n $"Stopping $prog: "
+	killproc $findik
+	RETVAL=$?
+	echo
+	[ $RETVAL = 0 ] && rm -f ${lockfile}
+}
+
+# See how we were called.
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  status)
+        status $findik
+	RETVAL=$?
+	;;
+  restart)
+	stop
+	start
+	;;
+  *)
+	echo $"Usage: $prog {start|stop|restart|status}"
+	exit 1
+esac
+
+exit $RETVAL

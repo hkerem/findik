@@ -1,0 +1,55 @@
+# Process this file with autoconf to produce a configure script.
+
+AC_PREREQ(2.59)
+AC_INIT([importer],[0.2],[findikmail@gmail.com])
+AC_CONFIG_SRCDIR([main.cpp])
+AC_CONFIG_HEADERS([config.h])
+
+# Checks for programs.
+AC_PROG_CXX
+AC_PROG_CC
+AC_PROG_LIBTOOL
+AC_PROG_RANLIB
+AC_LANG(C++)
+
+
+AM_INIT_AUTOMAKE
+
+# Checks for libraries.
+# ex: AC_CHECK_LIB([name],[break])
+AC_CHECK_LIB([pthread],[break])
+AC_CHECK_LIB([boost_thread],[break])
+AC_CHECK_LIB([boost_system],[break])
+AC_CHECK_LIB([log4cxx],[break])
+AC_CHECK_LIB([config++],[break])
+AC_CHECK_LIB([mysqlcppconn],[break])
+
+# Checks for header files.
+AC_CHECK_HEADER([pthread.h],[break])
+AC_CHECK_HEADER([boost/shared_ptr.hpp],[break])
+AC_CHECK_HEADER([boost/bind.hpp],[break])
+AC_CHECK_HEADER([boost/function.hpp],[break])
+AC_CHECK_HEADER([boost/lexical_cast.hpp],[break])
+AC_CHECK_HEADER([boost/logic/tribool.hpp],[break])
+AC_CHECK_HEADER([boost/noncopyable.hpp],[break])
+AC_CHECK_HEADER([boost/tuple/tuple.hpp],[break])
+AC_CHECK_HEADER([boost/thread.hpp],[break])
+
+AC_CHECK_HEADER([buffio.h],[break])
+AC_CHECK_HEADER([cppconn/driver.h],[break])
+AC_CHECK_HEADER([libconfig.h++],[break])
+AC_CHECK_HEADER([mysql_connection.h],[break])
+AC_CHECK_HEADER([tidy.h],[break])
+AC_CHECK_HEADER([zlib.h],[break])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_HEADER_STDBOOL
+AC_C_CONST
+AC_TYPE_SIZE_T
+
+AC_CONFIG_FILES([
+	Makefile
+])
+
+# Checks for library functions.
+AC_OUTPUT

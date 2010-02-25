@@ -1,0 +1,147 @@
+Vendor: FINDIK Project
+Name: findik
+Version: @VERSION@
+Release: 1
+License: GPL
+Group: System Environment/Daemons
+Source: http://heanet.dl.sourceforge.net/sourceforge/findik/%{name}-%{version}.tar.gz
+URL: http://findikproject.org
+BuildRoot: /var/tmp/%{name}-root
+Packager: H. Kerem Cevahir <kerem@findikproject.org>
+Requires: file boost log4cxx libconfig zlib pcre libtidy mysql++ openssl openldap libgssapi mysql
+BuildRequires: gcc-c++ make file boost-devel log4cxx-devel libconfig-devel zlib-devel pcre-devel libtidy-devel mysql++-devel openssl-devel openldap-devel libgssapi-devel
+
+Summary: A content filtering framework.
+
+%description
+FINDIK is a free open-source content filtering framework for TCP protocols. 
+Main objective of the project is to develop a secure, generic infrastructure 
+for protocol integration and support common communication techniques. In 
+order to avoid users to reimplement communication and proxying algorithms, 
+FINDIK API enforce user to work in a very simple and service oriented way. 
+As a result, user could be focused on just protocol implementation and 
+filtering operations.
+
+%prep
+%setup -q
+
+%build
+
+CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=/usr --sysconfdir=/etc
+make
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+make prefix=$RPM_BUILD_ROOT/usr sysconfdir=$RPM_BUILD_ROOT/etc install
+
+install -D -m 755 packaging/redhat/findik.init $RPM_BUILD_ROOT/etc/init.d/findik
+install -D -m 755 packaging/redhat/findik.logrotate $RPM_BUILD_ROOT/etc/logrotate.d/findik
+mkdir -p $RPM_BUILD_ROOT/var/log/findik
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%post
+/sbin/ldconfig
+
+# Add to services
+/sbin/chkconfig --add findik
+/sbin/chkconfig findik on
+
+# If mysql-server is installed and not running, start mysql-server.
+[ -n "$(rpm -q mysql-server)" ] && \
+	(/sbin/service mysqld status) || \
+	(/sbin/service mysqld start)
+
+# Import MySQL schema
+if (echo|mysql); then
+	if [ -z "$(echo 'show databases'|mysql|grep -e '^findik$')" ]; then
+		( mysqladmin create findik && \
+		mysql findik < /usr/share/findik/sql/schema.sql ) || ( \
+		echo "================================================="; \
+		echo "|   A problem occured while importing schema.   |"; \
+		echo "|   Please create a database and import         |"; \
+		echo "|   /usr/share/findik/sql/schema.sql manually.  |"; \
+		echo "================================================="; \
+		echo; )
+	else
+		echo "================================================="
+		echo "|   A database named 'findik' exists on MySQL.  |"
+		echo "|   Please create a database and import         |"
+		echo "|   /usr/share/findik/sql/schema.sql manually.  |"
+		echo "================================================="
+		echo
+	fi
+else
+	echo "================================================="
+	echo "|   Can not access MySQL.                       |"
+	echo "|   Please create a database and import         |"
+	echo "|   /usr/share/findik/sql/schema.sql manually.  |"
+        echo "|   Also, edit MySQL credentials in             |"
+	echo "|   /etc/findik/findik.cfg .                    |"
+	echo "================================================="
+	echo
+fi
+
+# Generating SSL keys.
+if [ ! -f /etc/findik/ssl/public.pem -a ! -f /etc/findik/ssl/private.pem -a ! -f /etc/findik/ssl/dh.pem ]; then
+	if (echo -e "ME\nRohan\nCalenardhon\nRohirrim\n\n*\nrohirrim@example.com\n"| \
+		/usr/share/findik/scripts/generate-ssl-keys /etc/findik/ssl 512); then
+		echo "================================================="
+		echo "|   Created initial SSL keys and 512-byte DH    |"
+		echo "|   parameters. If you want to recreate them,   |"
+		echo "|   you can call                                |"
+		echo "|   /usr/share/findik/scripts/generate-ssl-keys |"
+		echo "================================================="
+		echo
+	else
+		echo "================================================="
+		echo "|   A problem occured during key generation.    |"
+		echo "|   Please recall and inspect output of         |"
+		echo "|   /usr/share/findik/scripts/generate-ssl-keys |"
+		echo "|   command.                                    |"
+		echo "================================================="
+		echo
+	fi
+else
+	echo "================================================="
+	echo "|   Found SSL keys at /etc/findik/ssl/ and      |"
+	echo "|   kept unchanged. If you want to recreate     |"
+	echo "|   them, you can call                          |"
+	echo "|   /usr/share/findik/scripts/generate-ssl-keys |"
+	echo "================================================="
+	echo
+fi
+
+/sbin/service findik start
+
+%preun
+/sbin/service findik stop
+
+%postun
+/sbin/ldconfig
+
+%files
+%defattr(-,root,root)
+/etc/findik/ssl
+/etc/logrotate.d/findik
+/etc/init.d/findik
+/usr/bin/findik*
+/usr/lib/libfindik*
+/usr/share/findik
+%config(noreplace) /etc/findik/findik.cfg
+%config(noreplace) /etc/findik/findik_log.conf
+%config(noreplace) /etc/findik/forbidden_page.htm
+%config(noreplace) /etc/findik/ssl_trust.htm
+%attr(-,daemon,daemon) /var/log/findik
+
+%changelog
+* Thu Mar 19 2009 H. Kerem Cevahir <kerem@findikproject.org>
+- Added mysql for dependency.
+- Added MySQL auto import support.
+- Added auto key generation.
+
+* Tue Mar 17 2009 H. Kerem Cevahir <kerem@findikproject.org>
+- Initial spec file.
+

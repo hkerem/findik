@@ -1,0 +1,12 @@
+/var/log/findik/*log {
+	compress
+	missingok
+	notifempty
+	sharedscripts
+	postrotate
+		/sbin/service findik stop || true
+	endscript
+	postrotate
+		/sbin/service findik start || true
+	endscript
+}

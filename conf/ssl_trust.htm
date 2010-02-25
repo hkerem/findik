@@ -1,0 +1,104 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1254">
+<title>Untrusted Domain</title>
+<style type="text/css">
+body
+{
+	font-family: verdana,arial, 'Trebuchet MS';
+}
+
+.main-frame
+{
+	position: relative;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 100px;
+	width: 600px;
+	height: 350px;
+	border:1px solid black;
+	background-color: #ffffff; 
+		-moz-border-radius: 8px;
+}
+
+.img-td
+{
+	height:100px;
+	width:130px;
+	margin-left:auto;
+	margin-right:auto;
+	margin-top:auto;
+	margin-bottom:auto;
+	text-align: center;
+}
+
+.img-td img
+{
+	margin-left:auto;
+	margin-right:auto;
+	margin-top:auto;
+	border:0px;
+} 
+
+.reason-td {
+	font-size: 0.85em;
+}
+
+.header-td {
+	vertical-align: bottom;
+}
+
+h3 {
+	color:#992212;
+	font-size: 1.5em;
+	vertical-align: bottom;
+}
+
+a {
+	text-decoration: none;
+}
+</style>
+</head>
+
+<body bgcolor="#dfdfdf">
+<center>
+<div class="main-frame">
+<table border="0" cellpadding="0" cellspacing="0" width="95%">
+	<tr>
+		<td class="img-td" ><a href="http://findikproject.org">
+			<img src="http://findik.sourceforge.net/d/sites/default/files/garland_logo.png" alt="FINDIK Logo" >
+		</a></td>
+		<td class="header-td"><h3>Untrusted Site</h3></td>
+	</tr>
+	<tr>
+			<td></td>
+		<td><hr /></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td class="reason-td">
+			@@domain@@ uses invalid security certificate <br>(Error code: @@reason@@).<br><br>
+		</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td class="reason-td">
+			<ul>
+				 <li>This could be a problem with the server's configuration, or it could be someone trying to impersonate the server.</li>
+                 <li>If you have connected to this server successfully in the past, the error may be temporary, and you can try again later.</li>
+			</ul>
+		</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td class="reason-td">
+			<a href=";findik=trust_this_site">Trust this site</a>
+		</td>
+	</tr>
+</table>
+</div>
+</center>
+</body>
+
+</html>
