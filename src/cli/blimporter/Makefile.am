@@ -13,13 +13,19 @@ findik_import_SOURCES	= \
 			mysqldbmanager.cpp
 
 LIBS = \
-	-lboost_system \
-	-lboost_thread \
 	-lboost_program_options \
 	-llog4cxx \
 	-lconfig++ \
 	-lmysqlpp\
 	-lboost_filesystem
+
+if USE_BOOST_MT
+LIBS += -lboost_system-mt
+LIBS += -lboost_thread-mt
+else
+LIBS += -lboost_system
+LIBS += -lboost_thread
+endif
 
 INCLUDES = \
 	-I@top_srcdir@/ 

@@ -7,11 +7,13 @@ AC_CONFIG_HEADERS([src/include/config/config.h])
 
 AC_SUBST([TEST_SYSTEM])
 
+AM_PROG_LIBTOOL
+AM_INIT_AUTOMAKE
+
 # Checks for programs.
 AC_PROG_CXX
 AC_PROG_CC
 AC_PROG_LIBTOOL
-AC_PROG_RANLIB
 AC_LANG(C++)
 
 if test x"$(uname -s)" = xFreeBSD ; then
@@ -21,13 +23,10 @@ else
 	CPPFLAGS="$CPPFLAGS -I/usr/include/mysql"
 fi
 
-AM_INIT_AUTOMAKE
 
 # Checks for libraries.
 # ex: AC_CHECK_LIB([name],[break])
 AC_CHECK_LIB([pthread],[break])
-AC_CHECK_LIB([boost_thread],[break])
-AC_CHECK_LIB([boost_system],[break])
 AC_CHECK_LIB([z],[break])
 
 # Checks for header files.
@@ -52,6 +51,34 @@ AC_HEADER_STDBOOL
 AC_C_CONST
 AC_TYPE_SIZE_T
 
+
+# asking user if they want boost mt thread support
+AC_MSG_CHECKING(for Boost MT Libraries enabled)
+AC_ARG_ENABLE(
+boostmt,
+[AC_HELP_STRING([--enable-boostmt@<:@=no@:>@], [Enable to use Boost MT Libraries])],
+[ if test "x$enableval" = "xno"; then
+        boostmt=false
+        AC_MSG_RESULT(no)
+else
+        boostmt=true
+        AC_MSG_RESULT(yes)
+fi
+],
+[ # disable by default
+        boostmt=false
+        AC_MSG_RESULT(no)
+]
+)
+if test "x$boostmt" = "xtrue"; then
+        AC_DEFINE([USE_BOOST_MT],[],[Define to use Boost MT Libraries])
+        AC_CHECK_LIB([boost_thread-mt],[break])
+        AC_CHECK_LIB([boost_system-mt],[break])
+else
+        AC_CHECK_LIB([boost_thread],[break])
+        AC_CHECK_LIB([boost_system],[break])
+fi
+AM_CONDITIONAL(USE_BOOST_MT, test "x$boostmt" = "xtrue")
 
 # asking user if they want MAGIC support
 AC_MSG_CHECKING(for LIBMAGIC support enabled)

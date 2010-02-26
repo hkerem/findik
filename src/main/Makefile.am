@@ -22,39 +22,44 @@ findik_SOURCES		=	findik.cpp
 findik_LDADD		=	libfindik.la
 
 LIBS = \
-	-lboost_thread \
-	-lboost_system \
 	-lpthread \
 	-lz 
 
+if USE_BOOST_MT
+LIBS += -lboost_thread-mt
+LIBS += -lboost_system-mt
+else
+LIBS += -lboost_thread
+LIBS += -lboost_system
+endif
 if HAVE_MAGIC 
-        LIBS += -lmagic
+LIBS += -lmagic
 endif
 if HAVE_PCRE
-        LIBS += -lpcrecpp
+LIBS += -lpcrecpp
 endif
 if HAVE_ADKERB
-        LIBS += -lgssapi_krb5
+LIBS += -lgssapi_krb5
 endif
 if HAVE_LDAP
-        LIBS += -lcrypt
-        LIBS += -lldap
+LIBS += -lcrypt
+LIBS += -lldap
 endif
 if HAVE_MYSQL
-        LIBS += -lmysqlpp
+LIBS += -lmysqlpp
 endif
 if HAVE_SSL
-        LIBS += -lcrypto
-        LIBS += -lssl
+LIBS += -lcrypto
+LIBS += -lssl
 endif
 if HAVE_LIBCONFIG
-        LIBS += -lconfig++
+LIBS += -lconfig++
 endif
 if HAVE_BOOST_PO
-        LIBS += -lboost_program_options
+LIBS += -lboost_program_options
 endif
 if HAVE_LOG4CXX
-        LIBS += -llog4cxx 
+LIBS += -llog4cxx 
 endif
 
 INCLUDES 			= \

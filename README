@@ -9,3 +9,21 @@ Currently, integration of HTTP protocol is included in FINDIK project. Also, com
 
 After stable release with current features, intelligent content analysis algorithms, trusted time stamping and web configuration interface will be at top in future plans of FINDIK project.
 
+Installation
+=============================
+Standart
+./configure
+ make
+ make install
+is enough for most systems. Also source code includes a RPM Spec file for CentOS 5 distributions.
+
+In order to compile on Pardus with URL filtering features only;
+ ./configure \
+  --enable-magic=no 
+  --enable-clamdav=no \
+  --enable-fileext=no \
+  --enable-adkerb=no \
+  --enable-ldap=no \
+  --enable-boostmt=yes
+ make
+
