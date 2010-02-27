@@ -19,7 +19,7 @@ is enough for most systems. Also source code includes a RPM Spec file for CentOS
 
 In order to compile on Pardus with URL filtering features only;
  ./configure \
-  --enable-magic=no 
+  --enable-magic=no \
   --enable-clamdav=no \
   --enable-fileext=no \
   --enable-adkerb=no \

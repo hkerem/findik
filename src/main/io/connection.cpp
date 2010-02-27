@@ -95,7 +95,7 @@ namespace findik
 
 		void connection::register_for_local_read()
 		{
-			//LOG4CXX_DEBUG(debug_logger, "Registering connection for local read.");
+			LOG4CXX_DEBUG(debug_logger, "Registering connection for local read.");
 
 			//timeouts
 			if (is_keepalive())
@@ -120,7 +120,7 @@ namespace findik
 
 		void connection::register_for_remote_read()
 		{
-			//LOG4CXX_DEBUG(debug_logger, "Registering connection for remote read.");
+			LOG4CXX_DEBUG(debug_logger, "Registering connection for remote read.");
 
 			register_for_remote_receive_timeout();
 
@@ -142,25 +142,25 @@ namespace findik
 
 		void connection::register_for_local_write()
 		{
-			//LOG4CXX_DEBUG(debug_logger, "Registering connection for local write.");
+			LOG4CXX_DEBUG(debug_logger, "Registering connection for local write.");
 			register_for_local_write_io();
 		}
 
 		void connection::register_for_local_write(char * data_, std::size_t size_)
 		{
-			//LOG4CXX_DEBUG(debug_logger, "Registering connection for local write.");
+			LOG4CXX_DEBUG(debug_logger, "Registering connection for local write.");
 			register_for_local_write_io(data_, size_);
 		}
 
 		void connection::register_for_remote_write()
 		{
-			//LOG4CXX_DEBUG(debug_logger, "Registering connection for remote write.");
+			LOG4CXX_DEBUG(debug_logger, "Registering connection for remote write.");
 			register_for_remote_write_io();
 		}
 
 		void connection::register_for_remote_write(char * data_, std::size_t size_)
 		{
-			//LOG4CXX_DEBUG(debug_logger, "Registering connection for local write.");
+			LOG4CXX_DEBUG(debug_logger, "Registering connection for local write.");
 			register_for_remote_write_io(data_, size_);
 		}
 
@@ -338,7 +338,7 @@ namespace findik
 		void connection::handle_read_local(const boost::system::error_code& err,
 			std::size_t bytes_transferred)
 		{
-			//LOG4CXX_DEBUG(debug_logger, "Handling local read.");
+			LOG4CXX_DEBUG(debug_logger, "Handling local read.");
 			// TODO: refinement
 			if (err)
 			{
@@ -359,6 +359,8 @@ namespace findik
 
 			if (is_tunnel())
 			{
+                for (int i = 0; i++; i < bytes_transferred)
+                    std::cout << local_read_buffer_.data() + i;
 				register_for_remote_write(local_read_buffer_.data(), bytes_transferred);
 				return;
 			}
@@ -399,7 +401,7 @@ namespace findik
 
 			if (parser_result) // successfully parsed
 			{
-				//LOG4CXX_DEBUG(debug_logger, "Handling local read: data successfully parsed.");
+				LOG4CXX_DEBUG(debug_logger, "Handling local read: data successfully parsed.");
 
 				if (current_data()->is_stream())
 				{
@@ -424,7 +426,7 @@ namespace findik
 						
 						if (filter_result) // not denied
 						{
-							//LOG4CXX_DEBUG(debug_logger, "Accepted local data.");
+							LOG4CXX_DEBUG(debug_logger, "Accepted local data.");
 
 							if (is_keepalive())
 							{
@@ -500,7 +502,7 @@ namespace findik
 		void connection::handle_resolve_remote(const boost::system::error_code& err,
 			boost::asio::ip::tcp::resolver::iterator endpoint_iterator)
 		{
-			//LOG4CXX_DEBUG(debug_logger, "Handling remote resolve.");
+			LOG4CXX_DEBUG(debug_logger, "Handling remote resolve.");
 			if (err)
 			{
 				if (err != boost::asio::error::operation_aborted)
@@ -517,7 +519,7 @@ namespace findik
 		{
 			if (!err) // connected
 			{
-				//LOG4CXX_DEBUG(debug_logger, "Handling remote connect: successfully connected.");
+				LOG4CXX_DEBUG(debug_logger, "Handling remote connect: successfully connected.");
 				prepare_socket(remote_socket());
 				start_remote();
 			}
@@ -539,7 +541,7 @@ namespace findik
 
 		void connection::handle_write_remote(const boost::system::error_code& err)
 		{
-			//LOG4CXX_DEBUG(debug_logger, "Handling remote write.");
+			LOG4CXX_DEBUG(debug_logger, "Handling remote write.");
 			if (err)
 			{
 				if (err != boost::asio::error::operation_aborted)
@@ -566,7 +568,7 @@ namespace findik
 		void connection::handle_read_remote(const boost::system::error_code& err,
 			std::size_t bytes_transferred)
 		{
-			//LOG4CXX_DEBUG(debug_logger, "Handling remote read.");
+			LOG4CXX_DEBUG(debug_logger, "Handling remote read.");
 			if ( (err && err != boost::asio::error::eof) || 
 				( err == boost::asio::error::eof &&
 					!(current_data().get() != 0 &&
@@ -607,7 +609,7 @@ namespace findik
 
                         if (parser_result) // successfully parsed
                         {
-				//LOG4CXX_DEBUG(debug_logger, "Handling remote read: data successfully parsed.");
+				LOG4CXX_DEBUG(debug_logger, "Handling remote read: data successfully parsed.");
 
 				if (is_tunnel())
 				{
@@ -638,7 +640,7 @@ namespace findik
 
 					if (filter_result) // not denied
 					{
-						//LOG4CXX_DEBUG(debug_logger, "Accepted remote data.");
+						LOG4CXX_DEBUG(debug_logger, "Accepted remote data.");
 						current_data()->into_buffer(local_write_buffer_);
 						register_for_local_write();
 					}
@@ -686,7 +688,7 @@ namespace findik
 
 		void connection::handle_write_local(const boost::system::error_code& err)
 		{
-			//LOG4CXX_DEBUG(debug_logger, "Handling local write.");
+			LOG4CXX_DEBUG(debug_logger, "Handling local write.");
 			if (err)
 			{
 				if (err != boost::asio::error::operation_aborted)

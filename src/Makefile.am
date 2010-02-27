@@ -1,2 +1,2 @@
-SUBDIRS = cli include main #test
+SUBDIRS = cli include main test
 
