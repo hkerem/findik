@@ -1,14 +1,21 @@
 #!/bin/bash
+PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/bin"
 
 ldconfig
 
 # Add to services
-service mysql_server on
 service findik on
+
+# If squid is installed and not running, start squid.
+[ -n "$(service list|grep squid)" ] && \
+	(service squid on; service squid start)
 
 # If mysql-server is installed and not running, start mysql-server.
 [ -n "$(service list|grep mysql_server)" ] && \
-	(service mysql_server start)
+	(service mysql_server on; service mysql_server start)
+
+pgrep mysqld > /dev/null ||
+    (mysql_install_db; service mysql_server start)
 
 # Import MySQL schema
 if (echo|mysql); then
