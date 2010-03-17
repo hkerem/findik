@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT([findik],[0.2j],[findikmail@gmail.com])
+AC_INIT([findik],[0.2k],[findikmail@gmail.com])
 AC_CONFIG_SRCDIR([src/main/findik.cpp])
 AC_CONFIG_HEADERS([src/include/config/config.h])
 
