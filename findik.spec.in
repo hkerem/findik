@@ -38,6 +38,7 @@ make prefix=$RPM_BUILD_ROOT/usr sysconfdir=$RPM_BUILD_ROOT/etc install
 install -D -m 755 packaging/redhat/findik.init $RPM_BUILD_ROOT/etc/init.d/findik
 install -D -m 755 packaging/redhat/findik.logrotate $RPM_BUILD_ROOT/etc/logrotate.d/findik
 mkdir -p $RPM_BUILD_ROOT/var/log/findik
+mkdir -p $RPM_BUILD_ROOT/var/run/findik
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -135,6 +136,7 @@ fi
 %config(noreplace) /etc/findik/forbidden_page.htm
 %config(noreplace) /etc/findik/ssl_trust.htm
 %attr(-,daemon,daemon) /var/log/findik
+%attr(-,daemon,daemon) /var/run/findik
 
 %changelog
 * Thu Mar 19 2009 H. Kerem Cevahir <kerem@findikproject.org>

@@ -48,6 +48,8 @@
 #define FINDIK_CONFIG_FILE "/etc/findik/findik.cfg"
 #define FINDIK_LOG_CONFIG_FILE "/etc/findik/findik_log.conf"
 
+#define FINDIK_PID_FILE "/var/run/findik/findik.pid"
+
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1
 
@@ -92,6 +94,15 @@ static void daemonize()
 
 	/* If we got a good PID, then we can exit the parent process. */
 	if (pid > 0) {
+        /* Write PID to pid file. */
+        FILE* file = fopen(FINDIK_PID_FILE, "w");
+        if (file == NULL) {
+            syslog( LOG_NOTICE, "unable to write to pid file.");
+        } else {
+            fprintf(file, "%d\n", pid);
+            fclose(file);
+        }
+
 		/* Wait for confirmation from the child via SIGTERM or SIGCHLD, or
 		for two seconds to elapse (SIGALRM).  pause() should not return. */
 		alarm(2);
