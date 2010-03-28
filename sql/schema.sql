@@ -175,10 +175,8 @@ CREATE TABLE IF NOT EXISTS `btk_service_status` (
 
 CREATE TABLE IF NOT EXISTS `btk_timestamp_history` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `start_date` datetime NOT NULL,
-  `end_date` datetime NOT NULL,
+  `name` varchar(128) NOT NULL,
   `log_size` int(10) unsigned NOT NULL,
-  `status` smallint(6) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
