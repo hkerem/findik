@@ -43,6 +43,7 @@ namespace findik
                         ssl_local_private_key_("/etc/findik/ssl/private.pem"),
                         ssl_local_certificate_("/etc/findik/ssl/public.pem"),
                         ssl_local_dh_parameters_("/etc/findik/ssl/dh.pem"),
+                        ssl_remote_trust_all_(true),
                         ssl_remote_ca_("/etc/findik/ssl/ca.pem"),
                         server_max_session_(32),
                         server_max_connection_per_session_(4),
@@ -72,6 +73,7 @@ namespace findik
 			ssl_local_private_key_("/etc/findik/ssl/private.pem"),
 			ssl_local_certificate_("/etc/findik/ssl/public.pem"),
 			ssl_local_dh_parameters_("/etc/findik/ssl/dh.pem"),
+            ssl_remote_trust_all_(true),
 			ssl_remote_ca_("/etc/findik/ssl/ca.pem"),
 			server_max_session_(32),
 			server_max_connection_per_session_(4),
@@ -96,6 +98,7 @@ namespace findik
 			config_.getConfigValue_String("findik.ssl.local.private_key", ssl_local_private_key_);
 			config_.getConfigValue_String("findik.ssl.local.certificate", ssl_local_certificate_);
 			config_.getConfigValue_String("findik.ssl.local.dh_parameters", ssl_local_dh_parameters_);
+			config_.getConfigValue_Bool("findik.ssl.remote.trust_all", ssl_remote_trust_all_);
 			config_.getConfigValue_String("findik.ssl.remote.ca", ssl_remote_ca_);
 			config_.getConfigValue_UInt("findik.server.max_session", server_max_session_);
 			config_.getConfigValue_UInt("findik.server.max_connection_per_session", server_max_connection_per_session_);
@@ -218,6 +221,11 @@ namespace findik
 		const std::string & configuration_object::ssl_local_dh_parameters()
 		{
 			return ssl_local_dh_parameters_;
+		}
+
+		bool configuration_object::ssl_remote_trust_all()
+		{
+			return ssl_remote_trust_all_;
 		}
 
 		const std::string & configuration_object::ssl_remote_ca()

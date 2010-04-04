@@ -153,11 +153,12 @@ namespace findik
 
 		void ssl_connection::handle_handshake_remote(const boost::system::error_code& err)
 		{
-			//TODO: call logger
-//			if (err)
-//				std::cout << "--------->>> " << err.message() << std::endl;
-//				return;
-			long ssl_return_code_ = SSL_get_verify_result(remote_ssl_socket_.impl()->ssl);
+			long ssl_return_code_ = 0;
+
+            if (FI_CONFIG.ssl_remote_trust_all())
+                goto accept_certificate;
+
+			ssl_return_code_ = SSL_get_verify_result(remote_ssl_socket_.impl()->ssl);
 
 			switch (ssl_return_code_)
 			{

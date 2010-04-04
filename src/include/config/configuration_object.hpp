@@ -93,6 +93,8 @@ namespace findik
 
 			const std::string & ssl_local_dh_parameters();
 
+			bool ssl_remote_trust_all();
+
 			const std::string & ssl_remote_ca();
 
 			unsigned int server_max_session();
@@ -105,15 +107,15 @@ namespace findik
 
 			bool use_clamd();
 
-                        const std::string & clamd_host();
+            const std::string & clamd_host();
 
-                        const std::string & clamd_port();
+            const std::string & clamd_port();
 
-                        bool use_ad_kerbv5_negotiation_auth();
+            bool use_ad_kerbv5_negotiation_auth();
 
-                        const std::string & ad_service_name();
+            const std::string & ad_service_name();
 
-                        const std::string & ad_keytab_file();
+            const std::string & ad_keytab_file();
 
 			bool use_ldap_basic_auth();
                         
@@ -173,6 +175,8 @@ namespace findik
 
 			std::string ssl_local_dh_parameters_;
 
+			bool ssl_remote_trust_all_;
+
 			std::string ssl_remote_ca_;
 
 			unsigned int server_max_session_;
@@ -191,17 +195,17 @@ namespace findik
 			
 			bool use_ad_kerbv5_negotiation_auth_;
 		
-                        std::string ad_service_name_;
+            std::string ad_service_name_;
 
-                        std::string ad_keytab_file_;
+            std::string ad_keytab_file_;
 
 			bool use_ldap_basic_auth_;
                         
 			std::string ldap_base_dn_;
 
-                        std::string ldap_bind_dn_name_;
+            std::string ldap_bind_dn_name_;
 
-                        std::string ldap_bind_dn_password_;
+            std::string ldap_bind_dn_password_;
 
 			std::string ldap_extra_filter_;
 
