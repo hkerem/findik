@@ -41,6 +41,7 @@ namespace findik {
 			virtual bool domainQuery(const std::string & hostname, unsigned int group) = 0;
 			virtual bool urlQuery(const std::string & url, unsigned int group) = 0;
 			virtual bool btkQuery(const std::string & url) = 0;
+			virtual void btkWarningPage(std::string & warning_page) = 0;
 			virtual void pcreQuery(std::list<boost::tuple<int,std::string> > &pcre_map) = 0;
 			virtual bool fileExtQuery(const std::string & file_ext, unsigned int group) = 0;
 			virtual bool mimeTypeQuery(const std::string & mime_type, unsigned int group) = 0;

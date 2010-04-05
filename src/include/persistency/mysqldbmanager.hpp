@@ -48,6 +48,8 @@ namespace findik {
 
 			bool btkQuery(const std::string & url);
 
+                        void btkWarningPage(std::string & warning_page);
+
 			void pcreQuery(std::list<boost::tuple<int,std::string> > &pcre_map);
 
 			bool fileExtQuery(const std::string & file_ext, unsigned int group);
@@ -75,6 +77,7 @@ namespace findik {
 				domain_query = 100,
 				url_query = 101,
 				btk_query = 201,
+				btk_warning_page = 202,
 				pcre_query = 102,
 				file_ext_query = 103,
 				mime_type_query = 104,

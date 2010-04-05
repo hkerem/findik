@@ -79,6 +79,11 @@ namespace findik
 						"where u.domain = %0q"));
 			        btk_q->parse();
 
+				mysqlpp::Query * btk_warning_page_q = new mysqlpp::Query(
+					myconn_->query("select reply_html from btk_warning_page "
+						"order by time desc limit 1"));
+			        btk_warning_page_q->parse();
+
 				mysqlpp::Query * pcre_q = new mysqlpp::Query(
 					myconn_->query("SELECT c.content,c.catid from content c"));
 				//	myconn_->query("SELECT c.content,c.catid from content c join blacklist_category bc "
@@ -137,6 +142,8 @@ namespace findik
 				dbconnection__->set_object(url_query, url_q);
 
 				dbconnection__->set_object(btk_query, btk_q);
+
+				dbconnection__->set_object(btk_warning_page, btk_warning_page_q);
 
 				dbconnection__->set_object(pcre_query, pcre_q);
 				
@@ -253,6 +260,35 @@ namespace findik
 			dbconnection_->unlock();
 
                         return return_;
+		}
+
+                void mysqldbmanager::btkWarningPage(std::string & warning_page)
+		{
+			mysql_dbconnection_ptr dbconnection_(get_dbconnection());
+
+			try {
+                                mysqlpp::StoreQueryResult res = ((mysqlpp::Query *)dbconnection_->get_object(btk_warning_page))
+					->store();
+
+                                if(res.num_rows() == 1)
+                                {
+                                        warning_page = res[0][0].c_str();
+                                }
+				
+				res.clear();
+
+                        }
+                        catch (const mysqlpp::BadQuery& e) {
+                                LOG4CXX_ERROR(debug_logger, "ERROR" << e.what());
+                        }
+                        catch (const mysqlpp::BadConversion& e) {
+                                LOG4CXX_ERROR(debug_logger, "ERROR" << e.what());
+                        }
+                        catch (const mysqlpp::Exception& e) {
+                                LOG4CXX_ERROR(debug_logger, "ERROR" << e.what());
+                        }
+
+			dbconnection_->unlock();
 		}
 
 		void mysqldbmanager::pcreQuery(std::list<boost::tuple<int,std::string> > & pcre_map) 

@@ -88,9 +88,6 @@ namespace findik
 			{
 				if ( return_resp_ == "" )
 				{
-					std::string reply_html_(FI_SERVICES->reply_srv().reply_html());
-					time_t rawtime;
-					time(&rawtime);
 
 					return_resp_ = "HTTP/1.1 ";
 					if(return_code_ == 403) {
@@ -98,10 +95,23 @@ namespace findik
 					} else {
 						return_resp_ = return_resp_ + "404 Not Found\r\n";
 					}
+
+					std::string reply_html_;
+
+                                        if (filter_code_ == "btk_filter")
+                                        {
+                                                FI_SERVICES->db_srv().btkWarningPage(reply_html_);
+                                        }
+                                        else
+                                        {
+                                                reply_html_ = FI_SERVICES->reply_srv().reply_html();
+                                                time_t rawtime;
+                                                time(&rawtime);
 #ifdef HAVE_PCRE
-					FI_SERVICES->util_srv().pcre().global_replace("@@date@@", ctime(&rawtime), reply_html_);
-					FI_SERVICES->util_srv().pcre().global_replace("@@reason@@", reply_str_ , reply_html_);
+                                                FI_SERVICES->util_srv().pcre().global_replace("@@date@@", ctime(&rawtime), reply_html_);
+                                                FI_SERVICES->util_srv().pcre().global_replace("@@reason@@", reply_str_ , reply_html_);
 #endif 
+                                        }
 					return_resp_ = return_resp_ + "Content-Type: text/html; charset=UTF-8\r\n";
 					return_resp_ = return_resp_ + "Content-Length: " + 
 							boost::lexical_cast<std::string>(reply_html_.size()) + "\r\n";
