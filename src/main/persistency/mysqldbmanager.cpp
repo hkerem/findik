@@ -74,6 +74,11 @@ namespace findik
 						"where u.url = %0q and u.catid = %1"));
 			        url_q->parse();
 
+				mysqlpp::Query * btk_q = new mysqlpp::Query(
+					myconn_->query("SELECT u.id from btk_blacklist u "
+						"where u.domain = %0q"));
+			        btk_q->parse();
+
 				mysqlpp::Query * pcre_q = new mysqlpp::Query(
 					myconn_->query("SELECT c.content,c.catid from content c"));
 				//	myconn_->query("SELECT c.content,c.catid from content c join blacklist_category bc "
@@ -130,6 +135,8 @@ namespace findik
 				dbconnection__->set_object(domain_query, domain_q);
 
 				dbconnection__->set_object(url_query, url_q);
+
+				dbconnection__->set_object(btk_query, btk_q);
 
 				dbconnection__->set_object(pcre_query, pcre_q);
 				
@@ -191,6 +198,39 @@ namespace findik
 			try {
                                 mysqlpp::StoreQueryResult res = ((mysqlpp::Query *)dbconnection_->get_object(url_query))
 					->store(url, boost::lexical_cast<std::string>(group));
+
+                                if(res.num_rows() > 0)
+                                        return_ = false;
+				
+				res.clear();
+
+                        } catch (const mysqlpp::BadQuery& e) {
+                                LOG4CXX_ERROR(debug_logger, "ERROR" << e.what());
+                                return_ = false;
+                        }
+                        catch (const mysqlpp::BadConversion& e) {
+                                LOG4CXX_ERROR(debug_logger, "ERROR" << e.what());
+                                return_ = false;
+                        }
+                        catch (const mysqlpp::Exception& e) {
+                                LOG4CXX_ERROR(debug_logger, "ERROR" << e.what());
+                                return_ = false;
+                        }
+
+			dbconnection_->unlock();
+
+                        return return_;
+		}
+
+		bool mysqldbmanager::btkQuery(const std::string & url) 
+		{
+			mysql_dbconnection_ptr dbconnection_(get_dbconnection());
+
+			bool return_ = true;
+			
+			try {
+                                mysqlpp::StoreQueryResult res = ((mysqlpp::Query *)dbconnection_->get_object(btk_query))
+					->store(url);
 
                                 if(res.num_rows() > 0)
                                         return_ = false;

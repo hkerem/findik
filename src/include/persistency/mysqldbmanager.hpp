@@ -46,6 +46,8 @@ namespace findik {
 
 			bool urlQuery(const std::string & url, unsigned int group);
 
+			bool btkQuery(const std::string & url);
+
 			void pcreQuery(std::list<boost::tuple<int,std::string> > &pcre_map);
 
 			bool fileExtQuery(const std::string & file_ext, unsigned int group);
@@ -72,6 +74,7 @@ namespace findik {
 			enum prepared_statement_types {
 				domain_query = 100,
 				url_query = 101,
+				btk_query = 201,
 				pcre_query = 102,
 				file_ext_query = 103,
 				mime_type_query = 104,

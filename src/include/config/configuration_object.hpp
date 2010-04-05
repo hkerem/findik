@@ -63,6 +63,8 @@ namespace findik
 
 			unsigned int server_http_squid_keepalive_timeout();
 
+            bool server_http_btk();
+
 			unsigned int server_local_receive_timeout();
 
 			unsigned int server_remote_receive_timeout();
@@ -121,17 +123,17 @@ namespace findik
                         
 			const std::string & ldap_base_dn();
 
-                        const std::string & ldap_bind_dn_name();
+            const std::string & ldap_bind_dn_name();
 
-                        const std::string & ldap_bind_dn_password();
+            const std::string & ldap_bind_dn_password();
 
 			const std::string & ldap_extra_filter();
 
-                        const std::string & ldap_server_name();
+            const std::string & ldap_server_name();
 
-                        const std::string & ldap_search_attr();
+            const std::string & ldap_search_attr();
 
-                        const std::string & ldap_password_attr();
+            const std::string & ldap_password_attr();
 		
 			const std::string & ldap_realm();
 
@@ -144,6 +146,8 @@ namespace findik
 			unsigned int server_http_squid_port_;
 
 			unsigned int server_http_squid_keepalive_timeout_;
+
+            bool server_http_btk_;
 
 			unsigned int server_local_receive_timeout_;
 

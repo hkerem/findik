@@ -27,6 +27,7 @@ namespace findik
 			server_http_run_with_squid_(true),
                         server_http_squid_host_("localhost"),
                         server_http_squid_port_(3128),
+                        server_http_btk_(false),
                         server_http_squid_keepalive_timeout_(60),
                         server_http_max_object_size_(1048576),
                         server_local_receive_timeout_(15),
@@ -56,6 +57,7 @@ namespace findik
 		configuration_object::configuration_object(configuration_initializer & config_):
 			server_http_run_with_squid_(true),
 			server_http_squid_host_("localhost"),
+            server_http_btk_(false),
 			server_http_squid_port_(3128),
 			server_http_squid_keepalive_timeout_(60),
 			server_http_max_object_size_(1048576),
@@ -83,6 +85,7 @@ namespace findik
 			config_.getConfigValue_Bool("findik.server.http.run_with_squid", server_http_run_with_squid_);
 			config_.getConfigValue_String("findik.server.http.squid_host", server_http_squid_host_);
 			config_.getConfigValue_UInt("findik.server.http.squid_port", server_http_squid_port_);
+			config_.getConfigValue_Bool("findik.server.http.btk", server_http_btk_);
 			config_.getConfigValue_UInt("findik.server.http.squid_keepalive_timeout", server_http_squid_keepalive_timeout_);
 			config_.getConfigValue_UInt("findik.server.local_receive_timeout", server_local_receive_timeout_);
 			config_.getConfigValue_UInt("findik.server.remote_receive_timeout", server_remote_receive_timeout_);
@@ -141,6 +144,11 @@ namespace findik
 		unsigned int configuration_object::server_http_squid_port()
 		{
 			return server_http_squid_port_;
+		}
+
+		bool configuration_object::server_http_btk()
+		{
+			return server_http_btk_;
 		}
 
 		unsigned int configuration_object::server_http_squid_keepalive_timeout()

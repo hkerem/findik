@@ -54,6 +54,11 @@ namespace findik
 			std::list< boost::tuple<std::string, int, bool> > filter_list;
 			std::list< boost::tuple<std::string, int, bool> >::iterator it;
 
+                        if (FI_CONFIG.server_http_btk())
+                        {
+                                filter_list.push_back(boost::make_tuple("btk_filter", 0, true));
+                        }
+
 			FI_SERVICES->db_srv().aclQuery(filter_list, 
 				connection_->local_socket().remote_endpoint().address().to_v4().to_ulong());
 
