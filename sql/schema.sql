@@ -138,7 +138,7 @@ CREATE TABLE IF NOT EXISTS `btk_blacklist` (
 
 CREATE TABLE IF NOT EXISTS `btk_db_update` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `update_id` varchar(128) NOT NULL,
+  `update_id` int(10) NOT NULL,
   `update_date` bigint(20) NOT NULL,
   `new_record_count` int(10) unsigned NOT NULL,
   `deleted_record_count` int(10) unsigned NOT NULL,
