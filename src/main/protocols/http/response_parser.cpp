@@ -291,8 +291,10 @@ namespace findik
 						}
 						else
 						{
-							resp->add_blank_header();
+                                                        // Apache has a limit of 100 lines
 							FI_CHECK_VCTR(resp->get_headers());
+
+							resp->add_blank_header();
 							resp->last_header().name.push_back(input);
 							FI_RSTATE_OF(connection_) = header_name;
 							return boost::indeterminate;
@@ -357,7 +359,7 @@ namespace findik
 						}
 						else
 						{
-							resp->last_header().value.push_back(input);
+                                                        /*
 							if (resp->last_header().name == "Cookie")
 							{
 								FI_CHECK_HSTR(resp->last_header().value);
@@ -366,6 +368,14 @@ namespace findik
 							{
 								FI_CHECK_LSTR(resp->last_header().value);
 							}
+                                                        */
+                                                        
+                                                        // Browsers generally does not have a practical limit on this one
+                                                        // Apache HTTPD and Tomcat have a limit of 8192 bytes
+                                                        // IIS has a limit of 16384 bytes
+                                                        FI_CHECK_XXLSTR(resp->last_header().value);
+
+							resp->last_header().value.push_back(input);
 							return boost::indeterminate;
 						}
 					case expecting_newline_2:

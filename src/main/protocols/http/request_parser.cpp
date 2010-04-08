@@ -176,7 +176,12 @@ namespace findik
 						else if (is_uri_char(input))
 						{
 							req->uri.push_back(input);
-							FI_CHECK_LSTR(req->uri);
+
+                                                        // IE has a limit of 2083 bytes
+                                                        // Firefox, Safari and Opera have limits over 65546 bytes
+                                                        // Apache web server has a limit of 8192 bytes
+                                                        // IIS has a limit of 16384 bytes
+							FI_CHECK_XLSTR(req->uri);
 							return boost::indeterminate;
 						}
 						else
@@ -321,8 +326,10 @@ namespace findik
 						}
 						else
 						{
-							req->add_blank_header();
+                                                        // Apache has a limit of 100 lines
 							FI_CHECK_VCTR(req->get_headers())
+
+							req->add_blank_header();
 							req->last_header().name.push_back(input);
 							FI_LSTATE_OF(connection_) = header_name;
 							return boost::indeterminate;
@@ -387,8 +394,7 @@ namespace findik
 						}
 						else
 						{
-							req->last_header().value.push_back(input);
-							if (req->last_header().name == "Cookie")
+                                                        /*
 							{
 								FI_CHECK_HSTR(req->last_header().value);
 							}
@@ -396,6 +402,14 @@ namespace findik
 							{
 								FI_CHECK_LSTR(req->last_header().value);
 							}
+                                                        */
+                                                        
+                                                        // Browsers generally does not have a practical limit on this one
+                                                        // Apache HTTPD and Tomcat have a limit of 8192 bytes
+                                                        // IIS has a limit of 16384
+                                                        FI_CHECK_XXLSTR(req->last_header().value);
+
+							req->last_header().value.push_back(input);
 							return boost::indeterminate;
 						}
 					case expecting_newline_2:

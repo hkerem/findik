@@ -23,7 +23,8 @@
 #define FI_CHECK_SSTR(arg) if (arg.size() > 16) return false;
 #define FI_CHECK_MSTR(arg) if (arg.size() > 128) return false;
 #define FI_CHECK_LSTR(arg) if (arg.size() > 1024) return false;
-#define FI_CHECK_HSTR(arg) if (arg.size() > 8192) return false;
+#define FI_CHECK_XLSTR(arg) if (arg.size() > 8192) return false;
+#define FI_CHECK_XXLSTR(arg) if (arg.size() > 16384) return false;
 
 #define FI_CHECK_VCTR(arg) if (arg.size() > 128) return false;
 
