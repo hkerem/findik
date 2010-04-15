@@ -60,7 +60,7 @@ namespace findik
                         }
 
 			FI_SERVICES->db_srv().aclQuery(filter_list, 
-				connection_->local_socket().remote_endpoint().address().to_v4().to_ulong());
+				connection_->local_endpoint().to_v4().to_ulong());
 
 			for (it = filter_list.begin();
 				it != filter_list.end(); it++)
