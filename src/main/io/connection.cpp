@@ -110,7 +110,14 @@ namespace findik
 			// local pipelining or not
 			if (local_buffer_resume_point_ == NULL)
 			{
-				register_for_local_read_io();
+                                if (local_socket().is_open())
+                                {
+                                        register_for_local_read_io();
+                                }
+                                else
+                                {
+                                        LOG4CXX_DEBUG(debug_logger, "Local socket is already closed. Canceling local read.");
+                                }
 			}
 			else
 			{
@@ -122,9 +129,15 @@ namespace findik
 		{
 			LOG4CXX_DEBUG(debug_logger, "Registering connection for remote read.");
 
-			register_for_remote_receive_timeout();
-
-			register_for_remote_read_io();
+                        if (remote_socket().is_open())
+                        {
+                                register_for_remote_receive_timeout();
+                                register_for_remote_read_io();
+                        }
+                        else
+                        {
+                                LOG4CXX_DEBUG(debug_logger, "Remote socket is already closed. Canceling remote read.");
+                        }
 		}
 
 		void connection::register_for_resolve(const std::string & hostname, unsigned int port)
@@ -143,25 +156,58 @@ namespace findik
 		void connection::register_for_local_write()
 		{
 			LOG4CXX_DEBUG(debug_logger, "Registering connection for local write.");
-			register_for_local_write_io();
+
+                        if (local_socket().is_open())
+                        {
+                                register_for_local_write_io();
+                        }
+                        else
+                        {
+                                LOG4CXX_DEBUG(debug_logger, "Local socket is already closed. Canceling local write.");
+                        }
+
 		}
 
 		void connection::register_for_local_write(char * data_, std::size_t size_)
 		{
 			LOG4CXX_DEBUG(debug_logger, "Registering connection for local write.");
-			register_for_local_write_io(data_, size_);
+
+                        if (local_socket().is_open())
+                        {
+                                register_for_local_write_io(data_, size_);
+                        }
+                        else
+                        {
+                                LOG4CXX_DEBUG(debug_logger, "Local socket is already closed. Canceling local write.");
+                        }
 		}
 
 		void connection::register_for_remote_write()
 		{
 			LOG4CXX_DEBUG(debug_logger, "Registering connection for remote write.");
-			register_for_remote_write_io();
+
+                        if (remote_socket().is_open())
+                        {
+                                register_for_remote_write_io();
+                        }
+                        else
+                        {
+                                LOG4CXX_DEBUG(debug_logger, "Remote socket is already closed. Canceling remote write.");
+                        }
 		}
 
 		void connection::register_for_remote_write(char * data_, std::size_t size_)
 		{
 			LOG4CXX_DEBUG(debug_logger, "Registering connection for local write.");
-			register_for_remote_write_io(data_, size_);
+
+                        if (remote_socket().is_open())
+                        {
+                                register_for_remote_write_io(data_, size_);
+                        }
+                        else
+                        {
+                                LOG4CXX_DEBUG(debug_logger, "Remote socket is already closed. Canceling remote write.");
+                        }
 		}
 
 		void connection::register_for_connect(boost::asio::ip::tcp::resolver::iterator endpoint_iterator)
