@@ -56,7 +56,7 @@ namespace findik
 
                         if (FI_CONFIG.server_http_btk())
                         {
-                                filter_list.push_back(boost::make_tuple("btk_filter", 0, true));
+                                filter_list.push_back(boost::make_tuple("btk", 0, true));
                         }
 
 			FI_SERVICES->db_srv().aclQuery(filter_list, 

@@ -16,7 +16,7 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include "btk_filter.hpp"
+#include "http_connect_filter.hpp"
 
 namespace findik
 {
@@ -25,53 +25,35 @@ namespace findik
 		namespace http
 		{
 			// initialization of logger
-			log4cxx::LoggerPtr btk_filter::debug_logger_(log4cxx::Logger::getLogger("findik.protocols.http.btk_filter"));	
+			log4cxx::LoggerPtr http_connect_filter::debug_logger_(log4cxx::Logger::getLogger("findik.protocols.http.http_connect_filter"));	
 
-			std::string btk_filter::filter_code_ = "btk_filter";
+			std::string http_connect_filter::filter_code_ = "http_connect";
 
 			boost::tuple<bool, findik::filter::filter_reason_ptr> 
-					btk_filter::filter(findik::io::connection_ptr connection_, unsigned int param) 
+					http_connect_filter::filter(findik::io::connection_ptr connection_, unsigned int param) 
 			{
-				LOG4CXX_DEBUG(debug_logger_, "BTK domain/url filter entered"); // log for filter entrance
+				LOG4CXX_DEBUG(debug_logger_, "HTTP Connect filter entered"); // log for filter entrance
 				
 				// get request object from current data
 				request_ptr req = boost::static_pointer_cast<request>(connection_->current_data());
 
-				// check whether hostname exists in btk blacklist
-				if(!FI_SERVICES->db_srv().btkQuery(req->request_host())){
+				// check whether method is connect
+				if(req->method == request::connect){
 					boost::shared_ptr<http_filter_result_generator> reply_(
 						new http_filter_result_generator(
 							filter_code_, false, 
 							response::forbidden, true, 
-							"Domain blocked : " + req->request_host(), 
+							"HTTP Connet request denied.", 
 							req->request_host(), connection_, req
 						));	
 					return boost::make_tuple(false, findik::filter::filter_reason::create_reason(reply_->reply_str(), reply_->log_str()));	
-				} 
-
-				// check whether url exists in btk blacklist
-				std::string url = req->request_uri();
-				if(url.substr(0,5) == "https")
-					url = url.substr(8);
-				else if(url.substr(0,4) == "http")
-					url = url.substr(7);
-
-				if(!FI_SERVICES->db_srv().btkQuery(url)){
-					boost::shared_ptr<http_filter_result_generator> reply_(
-                                                new http_filter_result_generator(
-                                                        filter_code_, false, 
-                                                        response::forbidden, true, 
-                                                        "URL blocked : " + req->request_uri(), 
-                                                        req->request_uri(), connection_, req
-                                                ));
-                                        return boost::make_tuple(false, findik::filter::filter_reason::create_reason(reply_->reply_str(), reply_->log_str()));
 				} 
 
 				findik::filter::filter_reason_ptr frp_;
                                 return boost::make_tuple(true, frp_);
 			}
 
-                        bool btk_filter::is_applicable(findik::io::connection_ptr connection_)
+                        bool http_connect_filter::is_applicable(findik::io::connection_ptr connection_)
 			{
 				// set this filter to be used in request only
 				return connection_->proto() == findik::io::http && connection_->current_data()->is_local();	

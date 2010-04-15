@@ -6,7 +6,9 @@ libfindik_http_la_SOURCES	= \
 	data.cpp \
 	domain_filter.cpp \
 	btk_filter.cpp \
+	btk_filter_group.cpp \
 	filetype_filter_group.cpp \
+	http_connect_filter.cpp \
 	http_filter_logger.cpp \
 	http_filter_reason_factory.cpp \
 	http_filter_result_generator.cpp \

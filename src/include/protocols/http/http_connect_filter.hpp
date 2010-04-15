@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2010 H. Kerem Cevahir (shelta) <findikmail@gmail.com>
+  Copyright (C) 2008 Burak OGUZ (barfan) <findikmail@gmail.com>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -16,8 +16,8 @@
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#ifndef FINDIK_PROTOCOLS_HTTP_BTK_FILTER_HPP
-#define FINDIK_PROTOCOLS_HTTP_BTK_FILTER_HPP
+#ifndef FINDIK_PROTOCOLS_HTTP_HTTP_CONNECT_FILTER_HPP
+#define FINDIK_PROTOCOLS_HTTP_HTTP_CONNECT_FILTER_HPP
 
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/shared_ptr.hpp>
@@ -45,13 +45,13 @@ namespace findik
 		{
 			
 			/*!
-                        BTK filter for HTTP protocol.
+                        HTTP CONNECT method request filter.
                         \extends boost::enable_shared_from_this<data> to use boost shared pointers.
                         \extends findik::filter::abstract_filter because this is a filter for FINDIK HTTP subsystem.
-                        @author H. Kerem Cevahir (shelta)
+                        @author Burak OGUZ (barfan)
                         */
-			class btk_filter:
-				public boost::enable_shared_from_this<btk_filter>,
+			class http_connect_filter:
+				public boost::enable_shared_from_this<http_connect_filter>,
                                 public findik::filter::abstract_filter
                         {
 			
@@ -61,15 +61,17 @@ namespace findik
 
 				bool is_applicable(findik::io::connection_ptr connection_);
 
+			
 			protected:
 				static log4cxx::LoggerPtr debug_logger_;			
 				static std::string filter_code_;	
 			};
 
-			typedef boost::shared_ptr<btk_filter> btk_filter_ptr;
+			typedef boost::shared_ptr<http_connect_filter> http_connect_filter_ptr;
 
 		}
 	}
 }
 
 #endif
+

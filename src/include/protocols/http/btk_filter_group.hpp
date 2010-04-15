@@ -15,27 +15,17 @@
   along with this program; if not, write to the Free Software
   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-#ifndef FINDIK_PROTOCOLS_HTTP_BTK_FILTER_HPP
-#define FINDIK_PROTOCOLS_HTTP_BTK_FILTER_HPP
+#ifndef FINDIK_PROTOCOLS_HTTP_BTK_FILTER_GROUP_HPP
+#define FINDIK_PROTOCOLS_HTTP_BTK_FILTER_GROUP_HPP
 
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include <boost/logic/tribool.hpp>
-#include <boost/tuple/tuple.hpp>
-
-#include <boost/lexical_cast.hpp>
-#include <boost/foreach.hpp>
-
-#include "abstract_filter.hpp"
-#include "reply_service.hpp"
-#include "request.hpp"
-#include "response.hpp"
-#include "service_container.hpp"
-#include "http_filter_result_generator.hpp"
-
-#include <string>
+#include "filter_group.hpp"
 
 namespace findik
 {
@@ -45,31 +35,54 @@ namespace findik
 		{
 			
 			/*!
-                        BTK filter for HTTP protocol.
+                        BTK filter group.
                         \extends boost::enable_shared_from_this<data> to use boost shared pointers.
                         \extends findik::filter::abstract_filter because this is a filter for FINDIK HTTP subsystem.
                         @author H. Kerem Cevahir (shelta)
                         */
-			class btk_filter:
-				public boost::enable_shared_from_this<btk_filter>,
-                                public findik::filter::abstract_filter
+			class btk_filter_group:
+				public boost::enable_shared_from_this<btk_filter_group>,
+				public findik::filter::filter_group
                         {
 			
 			public:
-				boost::tuple<bool, findik::filter::filter_reason_ptr> 
-						filter(findik::io::connection_ptr connection_, unsigned int param = 0);	
 
-				bool is_applicable(findik::io::connection_ptr connection_);
+				/*!
+				Default c-tor.
+				*/
+				btk_filter_group();
+				
+				/*!
+				Default d-tor.
+				*/
+				~btk_filter_group();
 
+				class initializer
+                                {
+                                protected:
+                                        /*!
+                                        Default constructor.
+                                        Construction of this object will register a btk_fitler_group instance to filter_service.
+                                        */
+                                        initializer();
+
+                                        /*!
+                                        Instance to create initializer once.
+                                        */
+                                        static initializer instance;
+                                };
+
+			
 			protected:
-				static log4cxx::LoggerPtr debug_logger_;			
+				static log4cxx::LoggerPtr debug_logger_;		
 				static std::string filter_code_;	
 			};
 
-			typedef boost::shared_ptr<btk_filter> btk_filter_ptr;
+			typedef boost::shared_ptr<btk_filter_group> btk_filter_group_ptr;
 
 		}
 	}
 }
 
 #endif
+
