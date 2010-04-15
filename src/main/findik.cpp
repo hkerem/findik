@@ -148,6 +148,31 @@ static void daemonize()
 	kill( parent, SIGUSR1 );
 }
 
+std::vector<boost::shared_ptr<boost::thread> > threads;
+
+void start_new_io_thread();
+
+void io_service_run()
+{
+    try
+    {
+        FI_SERVICES->io_srv().run();
+    }
+	catch (std::exception& e)
+	{
+		std::cerr << "exception: " << e.what() << "\n";
+		std::cerr << "Thread crashed! Starting a new thread." << "\n";
+        start_new_io_thread();
+    }
+}
+
+void start_new_io_thread ()
+{
+    boost::shared_ptr<boost::thread> thread(new boost::thread(
+            boost::bind(&io_service_run)));
+    threads.push_back(thread);
+}
+
 int main(int argc, char* argv[])
 {
 	try
@@ -228,12 +253,9 @@ int main(int argc, char* argv[])
 		// LOG4CXX_INFO(findik::log_initializer::user_logger,"findik started to listen " + address + ":" + port);
 
 		// Create a pool of threads to run all of the io_services.
-		std::vector<boost::shared_ptr<boost::thread> > threads;
 		for (std::size_t i = 0; i < FI_CONFIG.io_number_of_threads(); ++i)
 		{
-			boost::shared_ptr<boost::thread> thread(new boost::thread(
-			boost::bind(&boost::asio::io_service::run, &(FI_SERVICES->io_srv()))));
-			threads.push_back(thread);
+            start_new_io_thread();
 		}
 
 		// LOG4CXX_DEBUG(findik::logging::log_initializer::debug_logger,"listening with " << num_threads << " threads");
