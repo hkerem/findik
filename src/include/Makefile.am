@@ -27,7 +27,7 @@ noinst_HEADERS = \
 	persistency/pooled_dbmanager.hpp \
 	persistency/dbconnection.hpp \
 	persistency/dbmanager.hpp \
-	protocols/http/btk_filter \
+	protocols/http/btk_filter.hpp \
 	protocols/http/btk_filter_group.hpp \
 	protocols/http/content_filter_group.hpp \
 	protocols/http/filetype_filter_group.hpp \
