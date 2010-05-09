@@ -28,6 +28,7 @@ noinst_HEADERS = \
 	persistency/dbconnection.hpp \
 	persistency/dbmanager.hpp \
 	protocols/http/btk_filter.hpp \
+	protocols/http/http_connect_filter.hpp \
 	protocols/http/btk_filter_group.hpp \
 	protocols/http/content_filter_group.hpp \
 	protocols/http/filetype_filter_group.hpp \
