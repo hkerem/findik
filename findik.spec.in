@@ -8,7 +8,7 @@ Source: http://heanet.dl.sourceforge.net/sourceforge/findik/%{name}-%{version}.t
 URL: http://findikproject.org
 BuildRoot: /var/tmp/%{name}-root
 Packager: H. Kerem Cevahir <kerem@findikproject.org>
-Requires: file boost log4cxx libconfig zlib pcre libtidy mysql++ openssl openldap libgssapi mysql
+Requires: file boost log4cxx libconfig zlib pcre libtidy mysql++ openssl openldap libgssapi mysql mysql-server squid
 BuildRequires: gcc-c++ make file boost-devel log4cxx-devel libconfig-devel zlib-devel pcre-devel libtidy-devel mysql++-devel openssl-devel openldap-devel libgssapi-devel
 
 Summary: A content filtering framework.
@@ -37,6 +37,7 @@ make prefix=$RPM_BUILD_ROOT/usr sysconfdir=$RPM_BUILD_ROOT/etc install
 
 install -D -m 755 packaging/redhat/findik.init $RPM_BUILD_ROOT/etc/init.d/findik
 install -D -m 755 packaging/redhat/findik.logrotate $RPM_BUILD_ROOT/etc/logrotate.d/findik
+install -D -m 755 packaging/redhat/squid.conf.pack $RPM_BUILD_ROOT/etc/squid/squid.conf
 mkdir -p $RPM_BUILD_ROOT/var/log/findik
 mkdir -p $RPM_BUILD_ROOT/var/run/findik
 
@@ -49,12 +50,16 @@ rm -rf $RPM_BUILD_ROOT
 # Add to services
 /sbin/chkconfig --add findik
 /sbin/chkconfig findik on
+/sbin/chkconfig --add squid
+/sbin/chkconfig squid on
+/sbin/chkconfig --add mysqld
+/sbin/chkconfig mysqld on
 
 # If mysql-server is installed and not running, start mysql-server.
 [ -n "$(rpm -q mysql-server)" ] && \
 	(/sbin/service mysqld status) || \
 	(/sbin/service mysqld start)
-
+/bin/sleep 2 
 # Import MySQL schema
 if (echo|mysql); then
 	if [ -z "$(echo 'show databases'|mysql|grep -e '^findik$')" ]; then
@@ -126,6 +131,7 @@ fi
 %files
 %defattr(-,root,root)
 /etc/findik/ssl
+/etc/squid/squid.conf
 /etc/logrotate.d/findik
 /etc/init.d/findik
 /usr/bin/findik*
@@ -139,6 +145,10 @@ fi
 %attr(-,daemon,daemon) /var/run/findik
 
 %changelog
+* Thu May 12 2010 H. Kerem Cevahir <kerem@findikproject.org>
+- Dependencies added - mysql-server and squid
+- Squid conf added
+
 * Thu Mar 19 2009 H. Kerem Cevahir <kerem@findikproject.org>
 - Added mysql for dependency.
 - Added MySQL auto import support.
