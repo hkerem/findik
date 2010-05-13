@@ -145,7 +145,7 @@ fi
 %attr(-,daemon,daemon) /var/run/findik
 
 %changelog
-* Thu May 12 2010 H. Kerem Cevahir <kerem@findikproject.org>
+* Thu May 13 2010 Burak Oguz <kerem@findikproject.org>
 - Dependencies added - mysql-server and squid
 - Squid conf added
 
