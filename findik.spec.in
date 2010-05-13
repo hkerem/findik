@@ -8,7 +8,7 @@ Source: http://heanet.dl.sourceforge.net/sourceforge/findik/%{name}-%{version}.t
 URL: http://findikproject.org
 BuildRoot: /var/tmp/%{name}-root
 Packager: H. Kerem Cevahir <kerem@findikproject.org>
-Requires: file boost log4cxx libconfig zlib pcre libtidy mysql++ openssl openldap libgssapi mysql-server 
+Requires: file boost log4cxx libconfig zlib pcre libtidy mysql++ openssl openldap libgssapi mysql mysql-server squid
 BuildRequires: gcc-c++ make file boost-devel log4cxx-devel libconfig-devel zlib-devel pcre-devel libtidy-devel mysql++-devel openssl-devel openldap-devel libgssapi-devel
 
 Summary: A content filtering framework.
@@ -37,7 +37,7 @@ make prefix=$RPM_BUILD_ROOT/usr sysconfdir=$RPM_BUILD_ROOT/etc install
 
 install -D -m 755 packaging/redhat/findik.init $RPM_BUILD_ROOT/etc/init.d/findik
 install -D -m 755 packaging/redhat/findik.logrotate $RPM_BUILD_ROOT/etc/logrotate.d/findik
-install -D -m 755 packaging/redhat/squid.conf.pack $RPM_BUILD_ROOT/etc/squid/squid.conf
+install -D -m 755 packaging/redhat/squid.conf.pack $RPM_BUILD_ROOT/etc/squid/squid.conf.findik
 mkdir -p $RPM_BUILD_ROOT/var/log/findik
 mkdir -p $RPM_BUILD_ROOT/var/run/findik
 
@@ -46,6 +46,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 /sbin/ldconfig
+
+mv /etc/squid/squid.conf /etc/squid/squid.conf.bak
+mv /etc/squid/squid.conf.findik /etc/squid/squid.conf
 
 # Add to services
 /sbin/chkconfig --add findik
@@ -124,6 +127,8 @@ fi
 
 %preun
 /sbin/service findik stop
+mv /etc/squid/squid.conf /etc/squid/squid.conf.findik
+mv /etc/squid/squid.conf.bak /etc/squid/squid.conf
 
 %postun
 /sbin/ldconfig
@@ -131,7 +136,7 @@ fi
 %files
 %defattr(-,root,root)
 /etc/findik/ssl
-/etc/squid/squid.conf
+/etc/squid/squid.conf.findik
 /etc/logrotate.d/findik
 /etc/init.d/findik
 /usr/bin/findik*
