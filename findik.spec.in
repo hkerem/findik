@@ -8,7 +8,7 @@ Source: http://heanet.dl.sourceforge.net/sourceforge/findik/%{name}-%{version}.t
 URL: http://findikproject.org
 BuildRoot: /var/tmp/%{name}-root
 Packager: H. Kerem Cevahir <kerem@findikproject.org>
-Requires: file boost log4cxx libconfig zlib pcre libtidy mysql++ openssl openldap libgssapi mysql mysql-server squid
+Requires: file boost log4cxx libconfig zlib pcre libtidy mysql++ openssl openldap libgssapi mysql mysql-server squid dhclient 
 BuildRequires: gcc-c++ make file boost-devel log4cxx-devel libconfig-devel zlib-devel pcre-devel libtidy-devel mysql++-devel openssl-devel openldap-devel libgssapi-devel
 
 Summary: A content filtering framework.
